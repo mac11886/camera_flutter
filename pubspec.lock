@@ -21,14 +21,14 @@ packages:
       name: camera
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.0+4"
+    version: "0.9.8+1"
   camera_android:
     dependency: transitive
     description:
       name: camera_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.0+4"
+    version: "0.9.8+3"
   camera_avfoundation:
     dependency: transitive
     description:
@@ -49,7 +49,7 @@ packages:
       name: camera_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.0+1"
+    version: "0.2.1+6"
   characters:
     dependency: transitive
     description:
@@ -104,6 +104,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_camera_overlay:
+    dependency: "direct main"
+    description:
+      name: flutter_camera_overlay
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1"
   flutter_hooks:
     dependency: transitive
     description:

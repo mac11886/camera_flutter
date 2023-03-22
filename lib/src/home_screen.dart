@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:camera_guide/model/identification_number.dart';
 import 'package:camera_guide/src/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -91,42 +92,61 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   void onTakePicture() async {
-    await controller.takePicture().then((XFile xfile) {
-      if (mounted) {
-        if (xfile != null) {
-          ref.read(xFileProvider.notifier).state = xfile;
-          // context.pushNamed(ProfileScreen.routeName);
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Ambil Gambar'),
-              content: SizedBox(
-                width: 200.0,
-                height: 200.0,
-                child: CircleAvatar(
-                  backgroundImage: Image.file(
-                    File(xfile.path),
-                  ).image,
-                ),
-              ),
-            ),
-          );
-          sendFormDataImg(File(xfile.path));
-        }
-      }
-      return;
-    });
-  }
+    var name = "";
+    final picture = await controller.takePicture();
+    final formData = http.MultipartRequest(
+        'POST', Uri.parse('http://188.166.217.149:4000/check'));
+    final file = await http.MultipartFile.fromPath('file', picture.path);
+    formData.files.add(file);
+    final response = await formData
+        .send()
+        .then((result) async {
+          http.Response.fromStream(result).then((response) {
+            print("response.statusCode:${response.statusCode}");
+            if (response.statusCode == 200) {
+              print("Uploaded! ");
+              print('response.body::' + response.body);
+              var res = identificationNumberFromJson(response.body);
+              setState(() {
+                name = res.name ?? "NO NAME";
+              });
+              print("${res.name}");
+              print("${res.ndId}");
+            }
 
-  void sendFormDataImg(File image) async {
-    final dio = Dio();
-    final formData = FormData.fromMap({
-      'file': image,
-    });
-    print("image:$image");
-    final response =
-        await dio.post('http://188.166.217.149:4000/check', data: formData);
-    print(response.data);
+            return response.body;
+          });
+        })
+        .catchError((err) => print('error : ' + err.toString()))
+        .whenComplete(() {});
+
+    // await controller.takePicture().then((XFile xfile) {
+    //   if (mounted) {
+    //     if (xfile != null) {
+    //       ref.read(xFileProvider.notifier).state = xfile;
+    // context.pushNamed(ProfileScreen.routeName);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("$name"),
+        content: SizedBox(
+          width: 200.0,
+          height: 200.0,
+          child: CircleAvatar(
+            backgroundImage: Image.file(
+              File(picture.path),
+            ).image,
+          ),
+        ),
+      ),
+    );  
+    
+
+    // sendFormDataImg(File(xfile.path));
+    // }
+    // }
+    // return;
+    // });
   }
 }
 
