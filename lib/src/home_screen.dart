@@ -1,13 +1,13 @@
+// ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, unnecessary_new
+
 import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:camera_guide/src/home_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:dio/dio.dart';
 import '../model/identification_number.dart';
-import 'profile_screen.dart';
 import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulHookConsumerWidget {
@@ -48,31 +48,61 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             return Stack(
               alignment: Alignment.bottomCenter,
               children: [
-                AspectRatio(
-                  aspectRatio: 3 / 4,
-                  child: CameraPreview(controller),
+                CameraPreview(controller),
+                const OverlayShape(),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                      margin:
+                          const EdgeInsets.only(top: 100, left: 20, right: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Scanning ID Card',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w700),
+                          ),
+                          Flexible(
+                            child: Text(
+                              'Position your ID card within the rectangle and ensure the image is perfectly readable.',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      )),
                 ),
-                AspectRatio(
-                  aspectRatio: 3 / 4,
-                  child: Image.asset(
-                    'assets/images/idTransparent.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                InkWell(
-                  onTap: () => onTakePicture(),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
-                    child: CircleAvatar(
-                      radius: 30.0,
-                      backgroundColor: Colors.white,
-                    ),
-                  ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Material(
+                      color: Colors.transparent,
+                      child: Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.black12,
+                            shape: BoxShape.circle,
+                          ),
+                          margin: const EdgeInsets.all(25),
+                          child: IconButton(
+                            enableFeedback: true,
+                            color: Colors.white,
+                            onPressed: () async {
+                              for (int i = 10; i > 0; i--) {
+                                await HapticFeedback.vibrate();
+                              }
+                              onTakePicture();
+                            },
+                            icon: const Icon(
+                              Icons.camera,
+                            ),
+                            iconSize: 72,
+                          ))),
                 ),
               ],
             );
           } else {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
@@ -135,6 +165,49 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         );
       }
     });
+  }
+}
+
+class OverlayShape extends StatelessWidget {
+  const OverlayShape({super.key});
+  @override
+  Widget build(BuildContext context) {
+    var media = MediaQuery.of(context);
+    var size = media.size;
+    double width = media.orientation == Orientation.portrait
+        ? size.shortestSide * .9
+        : size.longestSide * .5;
+
+    double ratio = 1.42;
+    double height = width / ratio;
+    double radius = 0.067 * height;
+    if (media.orientation == Orientation.portrait) {}
+    return Stack(
+      children: [
+        ColorFiltered(
+          colorFilter: const ColorFilter.mode(Colors.black54, BlendMode.srcOut),
+          child: Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  color: Colors.transparent,
+                ),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: width,
+                    height: width / ratio,
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(radius)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
   }
 }
 

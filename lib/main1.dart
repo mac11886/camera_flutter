@@ -162,7 +162,7 @@ class AlertDialogOK extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('ID:${id}'),
+      // title: const Text('ID:${id}'),
       content: const Text('กรุณาลองใหม่อีกครั้ง'),
       actions: <Widget>[
         TextButton(
