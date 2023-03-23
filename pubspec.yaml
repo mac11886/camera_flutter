@@ -18,6 +18,7 @@ dependencies:
   http: ^0.13.5
   logger: ^1.1.0
   flutter_camera_overlay: ^0.1.1
+  image: ^4.0.15
 
 dev_dependencies:
   flutter_lints: ^2.0.0

@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../model/identification_number.dart';
 import 'package:http/http.dart' as http;
+import 'package:image/image.dart' as img;
 
 class HomeScreen extends StatefulHookConsumerWidget {
   const HomeScreen({super.key});
@@ -125,14 +126,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     await controller.takePicture().then((XFile xfile) {
       if (mounted) {
         if (xfile != null) {
-          sendFormDataImg(xfile);
+          cropImage(File(xfile.path), 0, 150, 500, 280).then((value) {
+            sendFormDataImg(value!);
+          });
         }
       }
       return;
     });
   }
 
-  void sendFormDataImg(XFile image) async {
+  void sendFormDataImg(File image) async {
     final formData = http.MultipartRequest(
         'POST', Uri.parse('http://188.166.217.149:4000/check'));
     final file = await http.MultipartFile.fromPath('file', image.path);
@@ -209,6 +212,24 @@ class OverlayShape extends StatelessWidget {
       ],
     );
   }
+}
+
+Future<File?> cropImage(
+    File imageFile, int x, int y, int width, int height) async {
+  final bytes = await imageFile.readAsBytes();
+  final originalImage = img.decodeImage(bytes);
+  if (originalImage == null) {
+    return null;
+  }
+  final croppedImage =
+      img.copyCrop(originalImage, x: x, y: y, width: width, height: height);
+  if (croppedImage == null) {
+    return null;
+  }
+  final croppedBytes = img.encodeJpg(croppedImage);
+  final croppedFile = File('${imageFile.path}_cropped.jpg');
+  await croppedFile.writeAsBytes(croppedBytes);
+  return croppedFile;
 }
 
 enum EnumCameraDescription { front, back }
