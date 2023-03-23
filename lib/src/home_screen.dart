@@ -11,6 +11,8 @@ import '../model/identification_number.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
 
+typedef void OffsetCallback(Offset dataOffset);
+
 class HomeScreen extends StatefulHookConsumerWidget {
   const HomeScreen({super.key});
 
@@ -26,7 +28,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final xFileState = ref.watch(xFileProvider);
-
+    int x = 0;
+    int y = 0;
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -50,7 +53,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               alignment: Alignment.bottomCenter,
               children: [
                 CameraPreview(controller),
-                const OverlayShape(),
+                GetLayout(
+                  onDataReceived: (dataOffset) {
+                    setState(() {
+                      x = dataOffset.dx.toInt();
+                      x = dataOffset.dy.toInt();
+                    });
+                  },
+                ),
                 Align(
                   alignment: Alignment.topCenter,
                   child: Container(
@@ -92,7 +102,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               for (int i = 10; i > 0; i--) {
                                 await HapticFeedback.vibrate();
                               }
-                              onTakePicture();
+                              onTakePicture(x, y);
                             },
                             icon: const Icon(
                               Icons.camera,
@@ -122,11 +132,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     await controller.initialize();
   }
 
-  void onTakePicture() async {
+  void onTakePicture(int xCrop, int yCrop) async {
     await controller.takePicture().then((XFile xfile) {
       if (mounted) {
         if (xfile != null) {
-          cropImage(File(xfile.path), 0, 150, 500, 280).then((value) {
+          cropImage(File(xfile.path), xCrop, yCrop, 500, 280).then((value) {
             sendFormDataImg(value!);
           });
         }
@@ -171,8 +181,37 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
-class OverlayShape extends StatelessWidget {
-  const OverlayShape({super.key});
+class GetLayout extends StatefulWidget {
+  final OffsetCallback onDataReceived;
+  const GetLayout({super.key, required this.onDataReceived});
+
+  @override
+  State<GetLayout> createState() => _GetLayoutState();
+}
+
+class _GetLayoutState extends State<GetLayout> {
+  final _key = GlobalKey();
+
+  double X_Position = 0.00;
+  double Y_Position = 0.00;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_) => _getPosition());
+  }
+
+  void _getPosition() {
+    RenderBox? box = _key.currentContext!.findRenderObject() as RenderBox?;
+    Offset position = box!.localToGlobal(Offset.zero);
+    setState(() {
+      X_Position = position.dx;
+      Y_Position = position.dy;
+      // widget.onDataReceived(Offset(position.dx, position.dy));
+      // widget.onDataReceived(Offset(19, 350));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context);
@@ -192,6 +231,65 @@ class OverlayShape extends StatelessWidget {
           child: Stack(
             children: [
               Container(
+                decoration: const BoxDecoration(
+                  color: Colors.transparent,
+                ),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    key: _key,
+                    width: width,
+                    height: width / ratio,
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(radius)),
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  Text(
+                    X_Position != null ? 'X: ${X_Position.toString()}' : '',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  Text(
+                    Y_Position != null ? 'Y: ${Y_Position.toString()}' : '',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ],
+              )
+            ],
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class OverlayShape extends StatelessWidget {
+  const OverlayShape({super.key});
+  @override
+  Widget build(BuildContext context) {
+    GlobalKey gbKey = GlobalKey();
+
+    var media = MediaQuery.of(context);
+    var size = media.size;
+    double width = media.orientation == Orientation.portrait
+        ? size.shortestSide * .9
+        : size.longestSide * .5;
+
+    double ratio = 1.42;
+    double height = width / ratio;
+    double radius = 0.067 * height;
+    if (media.orientation == Orientation.portrait) {}
+    return Stack(
+      children: [
+        ColorFiltered(
+          colorFilter: const ColorFilter.mode(Colors.black54, BlendMode.srcOut),
+          child: Stack(
+            children: [
+              Container(
+                key: gbKey,
                 decoration: const BoxDecoration(
                   color: Colors.transparent,
                 ),
