@@ -109,11 +109,11 @@ class _ExampleCameraOverlayState extends State<ExampleCameraOverlay> {
           print("Uploaded! ");
           print('response.body::' + response.body);
           var res = identificationNumberFromJson(response.body);
-          print("${res.name}");
-          print("${res.ndId}");
-          setState(() {
-            checkTakeImg = res.status!;
-          });
+          // print("${res.name}");
+          // print("${res.ndId}");
+          // setState(() {
+          //   checkTakeImg = res.status!;
+          // });
         }
         return identificationNumberFromJson(response.body);
       });

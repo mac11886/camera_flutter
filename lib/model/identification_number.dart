@@ -4,23 +4,53 @@ import 'dart:convert';
 IdentificationNumber identificationNumberFromJson(String str) =>
     IdentificationNumber.fromJson(json.decode(str));
 class IdentificationNumber {
-  String? ndId;
-  String? name;
-  bool? status;
+  bool? result;
+  int? status;
+  String? message;
+  Data? data;
 
-  IdentificationNumber({this.ndId, this.name, this.status});
+  IdentificationNumber({this.result, this.status, this.message, this.data});
 
   IdentificationNumber.fromJson(Map<String, dynamic> json) {
-    ndId = json['NdId'];
-    name = json['Name'];
-    status = json['Status'];
+    result = json['result'];
+    status = json['status'];
+    message = json['message'];
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['NdId'] = this.ndId;
-    data['Name'] = this.name;
-    data['Status'] = this.status;
+    data['result'] = this.result;
+    data['status'] = this.status;
+    data['message'] = this.message;
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
+    }
+    return data;
+  }
+}
+
+class Data {
+  String? idCard;
+  String? name;
+  String? address;
+  String? dob;
+
+  Data({this.idCard, this.name, this.address, this.dob});
+
+  Data.fromJson(Map<String, dynamic> json) {
+    idCard = json['id_card'];
+    name = json['name'];
+    address = json['address'];
+    dob = json['dob'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id_card'] = this.idCard;
+    data['name'] = this.name;
+    data['address'] = this.address;
+    data['dob'] = this.dob;
     return data;
   }
 }
