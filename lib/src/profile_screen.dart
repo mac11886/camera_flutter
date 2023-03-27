@@ -6,7 +6,6 @@ import 'package:camera_guide/model/identification_number.dart';
 import 'package:camera_guide/src/home_controller.dart';
 import 'package:camera_guide/src/match_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_face_api/face_api.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,8 +19,6 @@ class ProfileScreen extends StatefulHookConsumerWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-  var image1 = MatchFacesImage();
-  var image2 = MatchFacesImage();
   @override
   Widget build(BuildContext context) {
     final xFileState = ref.watch(xFileProvider);

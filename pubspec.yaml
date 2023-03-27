@@ -20,8 +20,10 @@ dependencies:
   flutter_camera_overlay: ^0.1.1
   image: ^4.0.15
   intl: ^0.18.0
-  flutter_face_api: ^3.0.0
   image_picker: ^0.8.7
+  google_ml_kit: ^0.13.0
+  tflite_flutter: ^0.9.0
+
 dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:
@@ -31,7 +33,7 @@ flutter:
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/
+    - assets/
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
