@@ -1,9 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:camera_guide/model/identification_number.dart';
 import 'package:camera_guide/src/home_controller.dart';
+import 'package:camera_guide/src/match_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_face_api/face_api.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatefulHookConsumerWidget {
   const ProfileScreen({super.key});
@@ -14,6 +20,8 @@ class ProfileScreen extends StatefulHookConsumerWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  var image1 = MatchFacesImage();
+  var image2 = MatchFacesImage();
   @override
   Widget build(BuildContext context) {
     final xFileState = ref.watch(xFileProvider);
@@ -26,17 +34,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     txtId.text = (identificationNumber.data?.idCard ??= " ")!;
     txtAddress.text = (identificationNumber.data?.address ??= "")!;
     txtDateOfBirth.text = (identificationNumber.data?.dob ??= "")!;
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Profile'),
         ),
         body: Column(
           children: [
-            // Center(
-            //   child: Image.file(
-            //     File(xFileState.path),
-            //   ),
-            // ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               child: TextField(
@@ -70,33 +74,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     border: OutlineInputBorder(), labelText: "วันเกิด"),
               ),
             ),
-            // Text("Name :${identificationNumber.name} "),
+            Text("Pic :${identificationNumber.data?.pic} "),
             // Text("ID :${identificationNumber.ndId} ")
+            // MatchImg()
+            TextButton(
+                onPressed: () {
+                  context.pushNamed(MactchScreen.routeName);
+                },
+                child: Text("Next"))
           ],
         ));
-  }
-}
-
-class MatchImg extends StatefulWidget {
-  const MatchImg({super.key});
-
-  @override
-  State<MatchImg> createState() => _MatchImgState();
-}
-
-class _MatchImgState extends State<MatchImg> {
-  late final File file;
-
-  @override
-  Widget build(BuildContext context) {
-    // var request = MatchFacesRequest();
-    // request.images = [firstImage, secondImage];
-    // FaceSDK.matchFaces(jsonEncode(request)).then((matchFacesResponse) {
-    //   var response =
-    //       MatchFacesResponse.fromJson(json.decode(matchFacesResponse));
-    //   // ... check response?.results for results with score and similarity values.
-    // });
-
-    return const Placeholder();
   }
 }

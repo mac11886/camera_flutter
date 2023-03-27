@@ -1,4 +1,5 @@
 import 'package:camera_guide/src/home_screen.dart';
+import 'package:camera_guide/src/match_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -27,6 +28,13 @@ class MyApp extends StatelessWidget {
             name: ProfileScreen.routeName,
             pageBuilder: (context, state) => const NoTransitionPage(
               child: ProfileScreen(),
+            ),
+          ),
+           GoRoute(
+            path: '/match',
+            name: MactchScreen.routeName,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: MactchScreen(),
             ),
           ),
         ],

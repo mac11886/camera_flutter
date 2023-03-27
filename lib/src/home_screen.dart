@@ -167,21 +167,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         print(profile.data);
         ref.read(identificationNumberProvider.notifier).state = profile;
         context.pushNamed(ProfileScreen.routeName);
-        // showDialog(
-        //   context: context,
-        //   builder: (context) => AlertDialog(
-        //     title: Text(profile.name.toString()),
-        //     content: SizedBox(
-        //         width: 200.0, height: 200.0, child: Image.file(File(image.path))
-
-        //         //  CircleAvatar(
-        //         //   backgroundImage: Image.file(
-        //         //     File(image.path),
-        //         //   ).image,
-
-        //         ),
-        //   ),
-        // );
       } else {
         showDialog(
           context: context,

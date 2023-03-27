@@ -35,14 +35,16 @@ class Data {
   String? name;
   String? address;
   String? dob;
+  String? pic;
 
-  Data({this.idCard, this.name, this.address, this.dob});
+  Data({this.idCard, this.name, this.address, this.dob, this.pic});
 
   Data.fromJson(Map<String, dynamic> json) {
     idCard = json['id_card'];
     name = json['name'];
     address = json['address'];
     dob = json['dob'];
+    pic = json['pic'];
   }
 
   Map<String, dynamic> toJson() {
@@ -51,6 +53,7 @@ class Data {
     data['name'] = this.name;
     data['address'] = this.address;
     data['dob'] = this.dob;
+    data['pic'] = this.pic;
     return data;
   }
 }
