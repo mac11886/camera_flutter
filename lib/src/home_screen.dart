@@ -131,7 +131,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     var cameras = await availableCameras();
     controller = CameraController(
       cameras[EnumCameraDescription.front.index],
-      ResolutionPreset.medium,
+      ResolutionPreset.high,
       imageFormatGroup: ImageFormatGroup.yuv420,
     );
     await controller.initialize();
@@ -139,18 +139,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   void onTakePicture(int xCrop, int yCrop) async {
     await controller.setFocusMode(FocusMode.auto);
-
-    await controller.takePicture().then((XFile xfile) {
-      if (mounted) {
-        if (xfile != null) {
-          cropImage(File(xfile.path), 0, 300, 500, 280).then((value) {
-            print("xCrop::${xCrop}" + "yCrop:::${yCrop}");
-            sendFormDataImg(value!);
-          });
-        }
-      }
-      return;
-    });
+//  ref.read(identificationNumberProvider.notifier).state = profile;
+    context.pushNamed(ProfileScreen.routeName);
+    // await controller.takePicture().then((XFile xfile) {
+    //   if (mounted) {
+    //     if (xfile != null) {
+    //       cropImage(File(xfile.path), 0, 300, 500, 280).then((value) {
+    //         print("xCrop::${xCrop}" + "yCrop:::${yCrop}");
+    //         sendFormDataImg(value!);
+    //       });
+    //     }
+    //   }
+    //   return;
+    // });
   }
 
   void sendFormDataImg(File image) async {

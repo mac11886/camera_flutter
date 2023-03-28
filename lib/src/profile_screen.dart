@@ -27,10 +27,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     var txtId = TextEditingController();
     var txtAddress = TextEditingController();
     var txtDateOfBirth = TextEditingController();
-    txtName.text = (identificationNumber.data?.name ??= "")!;
-    txtId.text = (identificationNumber.data?.idCard ??= " ")!;
-    txtAddress.text = (identificationNumber.data?.address ??= "")!;
-    txtDateOfBirth.text = (identificationNumber.data?.dob ??= "")!;
+    // txtName.text = (identificationNumber.data?.name ??= "")!;
+    // txtId.text = (identificationNumber.data?.idCard ??= " ")!;
+    // txtAddress.text = (identificationNumber.data?.address ??= "")!;
+    // txtDateOfBirth.text = (identificationNumber.data?.dob ??= "")!;
 
     return Scaffold(
         appBar: AppBar(

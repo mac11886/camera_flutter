@@ -6,6 +6,7 @@ import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:image/image.dart' as imglib;
 
+import '../model/user.model.dart';
 
 class MLService {
   Interpreter? _interpreter;
@@ -58,9 +59,9 @@ class MLService {
     this._predictedData = List.from(output);
   }
 
-  // Future<User?> predict() async {
-  //   return _searchResult(this._predictedData);
-  // }
+  Future<User?> predict() async {
+    return _searchResult(this._predictedData);
+  }
 
   List _preProcess(CameraImage image, Face faceDetected) {
     // imglib.Image croppedImage = _cropFace(image, faceDetected);
@@ -102,25 +103,28 @@ class MLService {
   //   return convertedBytes.buffer.asFloat32List();
   // }
 
-  // Future<User?> _searchResult(List predictedData) async {
-  //   DatabaseHelper _dbHelper = DatabaseHelper.instance;
+  Future<User?> _searchResult(List predictedData) async {
+    // DatabaseHelper _dbHelper = DatabaseHelper.instance;
 
-  //   List<User> users = await _dbHelper.queryAllUsers();
-  //   double minDist = 999;
-  //   double currDist = 0.0;
-  //   User? predictedResult;
+    // List<User> users = await _dbHelper.queryAllUsers();
+    List<User> users = [
+      User(user: "user", password: "p", modelData: []),User(user: "user1", password: "p", modelData: [])
+    ];
+    double minDist = 999;
+    double currDist = 0.0;
+    User? predictedResult;
 
-  //   print('users.length=> ${users.length}');
+    print('users.length=> ${users.length}');
 
-  //   for (User u in users) {
-  //     currDist = _euclideanDistance(u.modelData, predictedData);
-  //     if (currDist <= threshold && currDist < minDist) {
-  //       minDist = currDist;
-  //       predictedResult = u;
-  //     }
-  //   }
-  //   return predictedResult;
-  // }
+    for (User u in users) {
+      currDist = _euclideanDistance(u.modelData, predictedData);
+      if (currDist <= threshold && currDist < minDist) {
+        minDist = currDist;
+        predictedResult = u;
+      }
+    }
+    return predictedResult;
+  }
 
   double _euclideanDistance(List? e1, List? e2) {
     if (e1 == null || e2 == null) throw Exception("Null argument");

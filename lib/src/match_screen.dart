@@ -3,12 +3,16 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
+import 'package:camera_guide/services/face_detector_service.dart';
+import 'package:camera_guide/services/ml_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 
+import '../model/user.model.dart';
 import 'home_controller.dart';
 
 late List<CameraDescription> _cameras;
@@ -23,12 +27,14 @@ class MactchScreen extends StatefulHookConsumerWidget {
 
 class _MactchScreenState extends ConsumerState<MactchScreen> {
   late CameraController controller;
+  FaceDetectorService faceDetectorService = FaceDetectorService();
+  MLService mlService = MLService();
 
   Future<void> initializationCamera() async {
     var cameras = await availableCameras();
     controller = CameraController(
       cameras[EnumCameraDescription.back.index],
-      ResolutionPreset.medium,
+      ResolutionPreset.high,
       imageFormatGroup: ImageFormatGroup.yuv420,
     );
     await controller.initialize();
@@ -37,6 +43,37 @@ class _MactchScreenState extends ConsumerState<MactchScreen> {
   @override
   void initState() {
     super.initState();
+    frameFrace();
+  }
+
+  frameFrace() async {
+    bool processing = false;
+    controller.startImageStream((image) {
+      if (processing) return;
+      processing = true;
+      predictFacesFromImage(image: image);
+    });
+  }
+
+  Future<void> predictFacesFromImage({@required CameraImage? image}) async {
+    assert(image != null, 'Image is null');
+    await faceDetectorService.detectFacesFromImage(image!);
+    if (faceDetectorService.faceDetected) {
+      mlService.setCurrentPrediction(image, faceDetectorService.faces[0]);
+    }
+    if (mounted) setState(() {});
+  }
+
+  Future<void> onTap() async {
+    if (faceDetectorService.faceDetected) {
+      User? user = await mlService.predict();
+
+      // var bottomSheetController = scaffoldKey.currentState!
+      //     . showBottomSheet((context) =>
+      print("user====${user?.modelData}");
+      // signInSheet(user: user);
+      // bottomSheetController.closed.whenComplete(_reload);
+    }
   }
 
   @override
