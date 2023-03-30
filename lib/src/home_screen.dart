@@ -155,7 +155,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   void sendFormDataImg(File image) async {
     final formData = http.MultipartRequest(
-        'POST', Uri.parse('http://188.166.217.149:4000/check'));
+        'POST', Uri.parse('http://159.65.9.80:4000/check'));
     final file = await http.MultipartFile.fromPath('file', image.path);
     formData.files.add(file);
     final response = await formData.send();

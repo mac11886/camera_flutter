@@ -22,6 +22,7 @@ dependencies:
   intl: ^0.18.0
   flutter_face_api: ^3.0.0
   image_picker: ^0.8.7
+  google_mlkit_face_detection: ^0.5.0
 dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:

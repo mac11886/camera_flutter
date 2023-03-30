@@ -99,7 +99,7 @@ class _ExampleCameraOverlayState extends State<ExampleCameraOverlay> {
 
   void sendImg(XFile picture) async {
     final formData = http.MultipartRequest(
-        'POST', Uri.parse('http://188.166.217.149:4000/check'));
+        'POST', Uri.parse('http://159.65.9.80:4000/check'));
     final file = await http.MultipartFile.fromPath('file', picture.path);
     formData.files.add(file);
     final response = await formData.send().then((result) async {
