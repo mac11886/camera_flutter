@@ -23,9 +23,6 @@ dependencies:
   flutter_face_api: ^3.0.0
   image_picker: ^0.8.7
   google_mlkit_face_detection: ^0.5.0
-  flutter_datetime_picker: ^1.5.1
-  flutter_rounded_date_picker: ^3.0.2
-  flutter_localization: ^0.1.10
 dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:

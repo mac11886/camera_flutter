@@ -6,12 +6,9 @@ import 'package:camera_guide/model/identification_number.dart';
 import 'package:camera_guide/src/home_controller.dart';
 import 'package:camera_guide/src/match_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_face_api/face_api.dart';
-import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
@@ -29,49 +26,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final txtId = TextEditingController();
   final txtAddress = TextEditingController();
   var txtDateOfBirth = TextEditingController();
-  Future<void> convertStringToDate(String dateString) async {
-    // dateString = '18 ม.ค. 2542';
-    await initializeDateFormatting("th_TH");
-    final formatter = DateFormat('dd MMM yyyy', 'th_TH');
-    final date = formatter.parse(dateString);
-    setState(() {
-      _selectedDate = date;
-    });
-  }
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
   }
 
-  void newDate() async {
-    DateTime? newDateTime = await showRoundedDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(_selectedDate.year - 50),
-      lastDate: DateTime(_selectedDate.year + 50),
-      borderRadius: 16,
-      locale: Locale('th', 'TH'),
-    );
-    setState(() {
-      _selectedDate = newDateTime ?? DateTime(2023);
-    });
-    print("newDateTime:::$newDateTime");
-  }
-
   @override
   Widget build(BuildContext context) {
     final xFileState = ref.watch(xFileProvider);
     final identificationNumber = ref.watch(identificationNumberProvider);
-    convertStringToDate("18 ม.ค. 2542");
-    var setFormatDate =
-        DateFormat('dd MMM yyyy', 'th_TH').format(_selectedDate);
-    txtName.text = (identificationNumber.data?.name ??= "")!;
-    txtId.text = (identificationNumber.data?.idCard ??= " ")!;
-    txtAddress.text = (identificationNumber.data?.address ??= "")!;
-    txtDateOfBirth.text = (identificationNumber.data?.dob ??= "")!;
-    convertStringToDate((identificationNumber.data?.dob ??= "")!);
+    // txtName.text = (identificationNumber.data?.name ??= "")!;
+    // txtId.text = (identificationNumber.data?.idCard ??= " ")!;
+    // txtAddress.text = (identificationNumber.data?.address ??= "")!;
+    // txtDateOfBirth.text = (identificationNumber.data?.dob ??= "")!;
+    // convertStringToDate((identificationNumber.data?.dob ??= "")!);
 
     return Scaffold(
         appBar: AppBar(
@@ -113,22 +82,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ),
             ),
             Text("Pic :${identificationNumber.data?.pic} "),
-            Row(
-              children: [
-                Text("วันเกิด"),
-                TextButton(
-                    onPressed: () {
-                      newDate();
-                      txtDateOfBirth.text = setFormatDate;
-                    },
-                    child: Text("${setFormatDate}")),
-              ],
-            ),
-            TextButton(
-                onPressed: () {
-                  newDate();
-                },
-                child: Text("DATEREAL")),
             TextButton(
                 onPressed: () {
                   context.pushNamed(MactchScreen.routeName);

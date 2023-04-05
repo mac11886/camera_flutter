@@ -138,8 +138,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   void onTakePicture(int xCrop, int yCrop) async {
-    await controller.setFocusMode(FocusMode.auto);
 
+    await controller.setFocusMode(FocusMode.auto);
     await controller.takePicture().then((XFile xfile) {
       if (mounted) {
         if (xfile != null) {
