@@ -2,7 +2,7 @@ import 'package:camera_guide/src/home_screen.dart';
 import 'package:camera_guide/src/match_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'profile_screen.dart';
 
 class MyApp extends StatelessWidget {
@@ -10,6 +10,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', 'US'), // English
+        const Locale('th', 'TH'), // Thai
+      ],
       theme: ThemeData(
         brightness: Brightness.light,
         primaryColor: Colors.blueAccent,
@@ -30,7 +38,7 @@ class MyApp extends StatelessWidget {
               child: ProfileScreen(),
             ),
           ),
-           GoRoute(
+          GoRoute(
             path: '/match',
             name: MactchScreen.routeName,
             pageBuilder: (context, state) => const NoTransitionPage(
