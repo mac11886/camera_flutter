@@ -20,7 +20,12 @@ class _MactchScreenState extends ConsumerState<MactchScreen> {
   late CameraController? cameraController;
   late CameraValue cameraValue;
   late CameraDescription frontCamera;
-
+  final faceDetector = FaceDetector(
+      options: FaceDetectorOptions(
+          enableLandmarks: true,
+          enableTracking: true,
+          enableClassification: true,
+          enableContours: true));
   bool isCameraInitialize = false;
 
   int stepIndex = 0;
@@ -248,8 +253,9 @@ class _MactchScreenState extends ConsumerState<MactchScreen> {
                   height: constraints.maxWidth,
                   child: Center(
                     child: LayoutBuilder(builder: (context, constraints) {
-                      var scale = (constraints.maxWidth / constraints.maxHeight) *
-                          cameraValue.aspectRatio;
+                      var scale =
+                          (constraints.maxWidth / constraints.maxHeight) *
+                              cameraValue.aspectRatio;
                       if (scale < 1) scale = 1 / scale;
                       return Transform.scale(
                         scale: scale,
@@ -268,9 +274,9 @@ class _MactchScreenState extends ConsumerState<MactchScreen> {
                 ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        context.pushNamed(HomeScreen.routeName);
                         stepIndex = 0;
                       });
+                      faceDetector.close();
                     },
                     child: Text("click"))
               ],
