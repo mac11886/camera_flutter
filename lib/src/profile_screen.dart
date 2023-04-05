@@ -21,7 +21,6 @@ class ProfileScreen extends StatefulHookConsumerWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-  late DateTime _selectedDate;
   final txtName = TextEditingController();
   final txtId = TextEditingController();
   final txtAddress = TextEditingController();
@@ -36,11 +35,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget build(BuildContext context) {
     final xFileState = ref.watch(xFileProvider);
     final identificationNumber = ref.watch(identificationNumberProvider);
-    // txtName.text = (identificationNumber.data?.name ??= "")!;
-    // txtId.text = (identificationNumber.data?.idCard ??= " ")!;
-    // txtAddress.text = (identificationNumber.data?.address ??= "")!;
-    // txtDateOfBirth.text = (identificationNumber.data?.dob ??= "")!;
-    // convertStringToDate((identificationNumber.data?.dob ??= "")!);
+    txtName.text = (identificationNumber.data?.name ??= "")!;
+    txtId.text = (identificationNumber.data?.idCard ??= " ")!;
+    txtAddress.text = (identificationNumber.data?.address ??= "")!;
+    txtDateOfBirth.text = (identificationNumber.data?.dob ??= "")!;
 
     return Scaffold(
         appBar: AppBar(
